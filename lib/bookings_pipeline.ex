@@ -18,6 +18,9 @@ defmodule BookingsPipeline do
             processors: [
                 default: []
             ],
+            batchers: [
+                default: []
+            ]
         ]
 
         Broadway.start_link(__MODULE__, options)
