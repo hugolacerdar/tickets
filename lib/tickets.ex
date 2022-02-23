@@ -18,8 +18,8 @@ defmodule Tickets do
     %{id: "3", email: "mock@example.com"},
   ]
 
-  def user_by_ids(ids) when is_list(ids) do
+  def users_by_ids(ids) when is_list(ids) do
     Process.sleep(Enum.random(100..200))
-    Enum.filter(@users, &1.id in ids)
+    Enum.filter(@users, & &1.id in ids)
   end
 end
