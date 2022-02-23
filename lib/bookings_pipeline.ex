@@ -72,4 +72,10 @@ defmodule BookingsPipeline do
         end)
     end
     
+    def handle_batch(_batcher, messages, batch_info, _context) do
+        IO.inspect(batch_info, label: "#{inspect(self())} Batch")
+
+        messages
+    end
+
 end
