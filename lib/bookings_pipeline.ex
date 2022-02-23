@@ -19,8 +19,8 @@ defmodule BookingsPipeline do
                 default: []
             ],
             batchers: [
-                cinema: []
-                musical: []
+                cinema: [],
+                musical: [],
                 default: []
             ]
         ]
@@ -34,7 +34,7 @@ defmodule BookingsPipeline do
             case message do
                 %{data: %{event: "cinema"}} = message -> Broadway.Message.put_batcher(message, :cinema)
 
-                %{data: %{event: "musical"}} = message -> Broadway.Message.put_batcher(message, :cinema)
+                %{data: %{event: "musical"}} = message -> Broadway.Message.put_batcher(message, :musical)
 
                 message -> message
             end
@@ -77,9 +77,14 @@ defmodule BookingsPipeline do
     end
     
     def handle_batch(_batcher, messages, batch_info, _context) do
-        IO.inspect(batch_info, label: "#{inspect(self())} Batch")
+        IO.puts("#{inspect(self())} Batch #{batch_info.batcher} #{batch_info.batch_key}")
+
+        messages
+        |> Tickets.insert_all_tickets()
+        |> Enum.each(fn %{data: %{user: user}} -> 
+            Tickets.send_email(user) 
+        end)
 
         messages
     end
-
 end
