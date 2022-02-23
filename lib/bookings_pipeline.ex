@@ -23,6 +23,7 @@ defmodule BookingsPipeline do
         Broadway.start_link(__MODULE__, options)
     end
 
+    # only use business logic here
     def handle_message(_processor, message, _context) do
         %{data: %{event: event, user: user}} = message
 
@@ -33,6 +34,7 @@ defmodule BookingsPipeline do
         IO.inspect(message, label: "Message")
     end
 
+    # should be used only for preloading data
     def prepare_messages(messages, _context) do
         # Parse data and convert to a map.
         messages = 
