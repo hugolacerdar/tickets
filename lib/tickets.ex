@@ -24,4 +24,9 @@ defmodule Tickets do
     Process.sleep(Enum.random(100..200))
     Enum.filter(@users, & &1.id in ids)
   end
+
+  def insert_all_tickets(messages) do
+    Process.sleep(Enum.count(messages) * 250)
+    messages
+  end
 end
