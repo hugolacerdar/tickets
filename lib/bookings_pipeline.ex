@@ -79,10 +79,13 @@ defmodule BookingsPipeline do
     def handle_batch(_batcher, messages, batch_info, _context) do
         IO.puts("#{inspect(self())} Batch #{batch_info.batcher} #{batch_info.batch_key}")
 
+        # TODO: add format message to send
         messages
         |> Tickets.insert_all_tickets()
-        |> Enum.each(fn %{data: %{user: user}} -> 
-            Tickets.send_email(user) 
+        |> Enum.each(fn message -> 
+             channel = message.metadata.amqp_channel
+             payload = "email,#{message.data.user.email}"
+             AMQP.Basic.publish(channel, "", "notifications_queue", payload)
         end)
 
         messages
